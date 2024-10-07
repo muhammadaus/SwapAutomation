@@ -29,8 +29,15 @@ contract AutoRange is Automator {
         uint64 maxRewardX64
     );
 
-    constructor(INonfungiblePositionManager _npm, address _operator, address _withdrawer, uint32 _TWAPSeconds, uint16 _maxTWAPTickDifference, address[] memory _swapRouterOptions) 
-        Automator(_npm, _operator, _withdrawer, _TWAPSeconds, _maxTWAPTickDifference, _swapRouterOptions) {
+    constructor(
+    INonfungiblePositionManager _npm,
+    address _operator,
+    address _withdrawer,
+    uint32 _TWAPSeconds,
+    uint16 _maxTWAPTickDifference,
+    address[] memory _swapRouterOptions,
+    address initialOwner
+) Automator(_npm, _operator, _withdrawer, _TWAPSeconds, _maxTWAPTickDifference, _swapRouterOptions) {
     }
 
     // defines when and how a position can be changed by operator

@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/SafeCast.sol";
 
 import "v3-core/interfaces/IUniswapV3Factory.sol";
 import "v3-core/interfaces/IUniswapV3Pool.sol";
@@ -12,6 +12,7 @@ import "v3-core/libraries/FullMath.sol";
 
 import "v3-periphery/interfaces/INonfungiblePositionManager.sol";
 import "v3-periphery/interfaces/external/IWETH9.sol";
+import "v3-periphery/libraries/PoolAddress.sol";
 
 abstract contract Automator is Ownable {
 
@@ -55,11 +56,19 @@ abstract contract Automator is Ownable {
     uint16 public maxTWAPTickDifference;
     uint8 public swapRouterIndex; // default is 0
 
-    constructor(INonfungiblePositionManager npm, address _operator, address _withdrawer, uint32 _TWAPSeconds, uint16 _maxTWAPTickDifference, address[] memory _swapRouterOptions) {
+    constructor(
+    INonfungiblePositionManager _npm,
+    address _operator,
+    address _withdrawer,
+    uint32 _TWAPSeconds,
+    uint16 _maxTWAPTickDifference,
+    address[] memory _swapRouterOptions,
+    address initialOwner
+) Ownable(initialOwner) {
 
-        nonfungiblePositionManager = npm;
-        weth = IWETH9(npm.WETH9());
-        factory = IUniswapV3Factory(npm.factory());
+        nonfungiblePositionManager = _npm;
+        weth = IWETH9(_npm.WETH9());
+        factory = IUniswapV3Factory(_npm.factory());
 
         // hardcoded 3 options for swap routers
         swapRouterOption0 = _swapRouterOptions[0];
